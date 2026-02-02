@@ -4,7 +4,6 @@ from tests.integration.base_test import BaseTest
 
 
 class TestRedisWrapper(BaseTest):
-
     def setUp(self):
         parent_setup = super().setUp()
         self.cfg = RedisSettings()

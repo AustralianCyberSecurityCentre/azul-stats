@@ -8,7 +8,6 @@ from tests.integration.base_test import BaseTest
 
 
 class TestKafkaWrapper(BaseTest):
-
     def setUp(self) -> None:
         self.cfg = KafkaSettings()
         self.kw = KafkaWrapper()

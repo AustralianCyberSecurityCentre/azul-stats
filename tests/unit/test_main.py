@@ -42,7 +42,6 @@ class TestMainCorrectGroups(unittest.IsolatedAsyncioTestCase):
 
 
 class TestMainAsync(unittest.IsolatedAsyncioTestCase):
-
     async def _slow_service(self):
         await asyncio.sleep(1)
 
@@ -173,7 +172,6 @@ class TestMainAsync(unittest.IsolatedAsyncioTestCase):
 
 
 class TestMainThreaded(unittest.IsolatedAsyncioTestCase):
-
     def _slow_service(self, timeout_sec: float):
         time.sleep(2)
 
