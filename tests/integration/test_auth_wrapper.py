@@ -4,7 +4,6 @@ from tests.integration.base_test import BaseTest
 
 
 class TestAuthWrapper(BaseTest):
-
     def setUp(self):
         parent_setup = super().setUp()
         self.cfg = AuthSettings()

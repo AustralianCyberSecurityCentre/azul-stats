@@ -4,7 +4,6 @@ from .base_test import BaseTest
 
 
 class TestOpensearchWrapper(BaseTest):
-
     async def asyncTearDown(self) -> None:
         """Delete the test index after each test."""
         sw = SearchWrapper()

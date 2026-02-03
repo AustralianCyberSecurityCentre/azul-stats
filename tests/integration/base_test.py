@@ -19,7 +19,6 @@ def sius(key, data):
 
 
 class BaseTest(IsolatedAsyncioTestCase):
-
     @classmethod
     def setUpClass(cls):
         cls.alter_env()

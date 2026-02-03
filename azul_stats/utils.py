@@ -31,12 +31,12 @@ class SysExitThread(threading.Thread):
 def random_word(length: int):
     """Get a random ascii word that is as long as the provided length."""
     letters = string.ascii_lowercase
-    return "".join(random.choice(letters) for _ in range(length))  # nosec B311
+    return "".join(random.choice(letters) for _ in range(length))  # noqa S311
 
 
 def random_int(num_digits: int):
     """Get a random integer of the provided length (not using 0 to prevent leading zeros)."""
-    return int("".join(str(random.choice([1, 2, 3, 4, 5, 6, 7, 8, 9])) for _ in range(num_digits)))  # nosec B311
+    return int("".join(str(random.choice([1, 2, 3, 4, 5, 6, 7, 8, 9])) for _ in range(num_digits)))  # noqa S311
 
 
 def has_timed_out(start_time: float, timeout: float) -> bool:
