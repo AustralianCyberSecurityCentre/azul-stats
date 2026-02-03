@@ -88,8 +88,8 @@ REDIS_AUTH = "auth"
 REDIS_SET_KEY = "set"
 REDIS_GET_KEY = "get"
 
-AUTH_GET_TOKEN = "get_token"  # nosec B105
-AUTH_VALIDATE_TOKEN = "valid_token"  # nosec B105
+AUTH_GET_TOKEN = "get_token"  # noqa S105
+AUTH_VALIDATE_TOKEN = "valid_token"  # noqa S105
 
 AZUL_PROBE_UI = "webui"
 AZUL_PROBE_UI_STATIC = "webui_static"

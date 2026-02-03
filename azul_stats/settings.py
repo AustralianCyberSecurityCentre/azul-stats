@@ -149,8 +149,8 @@ class RedisSettings(BaseSettings):
 class OAuthMethodEnum(StrEnum):
     """Supported oauth methods (tested and all work for Keycloak and Azure)."""
 
-    client_secret_post = "client_secret_post"  # nosec B105
-    client_secret_basic = "client_secret_basic"  # nosec B105
+    client_secret_post = "client_secret_post"  # noqa S105
+    client_secret_basic = "client_secret_basic"  # noqa S105
 
 
 class AuthSettings(BaseSettings):
