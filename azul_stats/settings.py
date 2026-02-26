@@ -1,6 +1,7 @@
 """Settings for the Stats module."""
 
-from enum import StrEnum
+import logging
+from enum import Enum, StrEnum
 from typing import Annotated
 
 from pydantic import AfterValidator
@@ -27,6 +28,9 @@ class StatsSettings(BaseSettings):
     # Port that prometheus will scrape from.
     prometheus_port: int = 8900
     max_scrape_time: float = 60
+
+    # Log level
+    log_level: str = "INFO"
 
     # Enable different scrape options
     azul: bool = False

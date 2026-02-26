@@ -37,7 +37,8 @@ class KafkaWrapper:
                 api_version_auto_timeout_ms=self.cfg.max_timeout_ms,
             )
         except Exception as e:
-            logger.warning(f"Could not connect to kafka broker with error {e} and details {traceback.format_exc()}")
+            logger.debug(f"Could not connect to kafka broker with error {e} and details {traceback.format_exc()}")
+            logger.warning(f"Could not connect to kafka broker with error {e}")
             self.admin_client = None
             self.consumer_client = None
             self.producer_client = None

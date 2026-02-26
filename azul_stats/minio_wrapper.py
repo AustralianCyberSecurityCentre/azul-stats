@@ -89,6 +89,7 @@ class MinioWrapper:
             if self._check_blob_exists():
                 self._client.remove_object(self.cfg.bucket_name, self.cfg.test_blob)
             return True
-        except Exception:
-            logger.warning(f"Couldn't delete object from minio for reason {traceback.format_exc()}")
+        except Exception as e:
+            logger.debug(f"Couldn't delete object from minio for reason {traceback.format_exc()}")
+            logger.warning(f"Couldn't delete object from minio for reason {e}")
             return False

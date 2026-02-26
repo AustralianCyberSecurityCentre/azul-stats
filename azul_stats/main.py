@@ -103,6 +103,9 @@ class StatsCollector:
 
     def __init__(self, settings: StatsSettings):
         self.s = settings
+        logging.basicConfig(force=True)
+        logging.getLogger().setLevel(self.s.log_level)
+
         self._running_services: list[str] = []
         self._async_stat_scrape_func: list[Callable[[], Future]] = []
         # Function that accepts number of seconds to timeout thread.
@@ -169,9 +172,10 @@ class StatsCollector:
             azul_health_check_status.labels(system=StatTargets.opensearch, action=stage).set(FAIL_VALUE)
             return
         except Exception as e:
-            logger.error(
+            logger.debug(
                 f"Error occurred while gathering opensearch stats {e} with stack track {traceback.format_exc()}"
             )
+            logger.error(f"Error occurred while gathering opensearch stats {e}")
             azul_health_check_status.labels(system=StatTargets.opensearch, action=stage).set(FAIL_VALUE)
 
     @staticmethod
@@ -248,9 +252,10 @@ class StatsCollector:
             try:
                 await sw.delete_index()
             except Exception as e:
-                logger.error(
+                logger.debug(
                     f"Error occurred when deleting opensearch index {e} with stack track {traceback.format_exc()}"
                 )
+                logger.error(f"Error occurred when deleting opensearch index {e}")
 
     def azul_probe_setup(self, cfg: AzulProbeSettings) -> Callable[..., Coroutine]:
         """Setup and return a function that can probe Azul and record stats in prometheus about the results."""
@@ -305,14 +310,18 @@ class StatsCollector:
                 try:
                     kw.delete_test_topic()
                 except Exception as e:
-                    logger.warning(f"Failed to delete kafka topic with error {e} and message {traceback.format_exc()}")
+                    logger.debug(f"Failed to delete kafka topic with error {e} and message {traceback.format_exc()}")
+                    logger.warning(f"Failed to delete kafka topic with error {e}")
         except TimeoutError:
             logger.warning("A kafka stats thread ran out of time to collect stats.")
             raise
         except Exception as e:
-            logger.warning(
+            logger.debug(
                 "An unhandled exception occurred at some point when handling kafka stats"
                 + f", the exception was {e} and message {traceback.format_exc()}"
+            )
+            logger.warning(
+                f"An unhandled exception occurred at some point when handling kafka stats, the exception was {e}"
             )
             raise
 
@@ -343,16 +352,20 @@ class StatsCollector:
                 try:
                     mw.delete_blob()
                 except Exception as e:
-                    logger.warning(
+                    logger.debug(
                         f"Failed to delete minio blob on {system} with error {e} and message {traceback.format_exc()}"
                     )
+                    logger.warning(f"Failed to delete minio blob on {system} with error {e}")
             except TimeoutError:
                 logger.warning("A minio stats thread ran out of time to collect stats.")
                 raise
             except Exception as e:
-                logger.warning(
+                logger.debug(
                     "An unhandled exception occurred at some point when handling minio stats"
                     + f", the exception was {e} and message {traceback.format_exc()}"
+                )
+                logger.warning(
+                    "An unhandled exception occurred at some point when handling minio stats, the exception was {e}"
                 )
                 raise
 
@@ -372,17 +385,19 @@ class StatsCollector:
                 try:
                     rw.delete_key()
                 except Exception as e:
-                    logger.warning(
-                        f"Failed to delete redis key on {StatTargets.redis} with error {e}"
-                        + f" and message {traceback.format_exc()}"
+                    logger.debug(
+                        f"Failed to delete redis key on {StatTargets.redis} with error {e} and message {traceback.format_exc()}"
                     )
+                    logger.warning(f"Failed to delete redis key on {StatTargets.redis} with error {e} and")
             except TimeoutError:
                 logger.warning("A redis stats thread ran out of time to collect stats.")
                 raise
             except Exception as e:
+                logger.debug(
+                    f"An unhandled exception occurred at some point when handling redis stats, the exception was {e} and message {traceback.format_exc()}"
+                )
                 logger.warning(
-                    "An unhandled exception occurred at some point when handling redis stats"
-                    + f", the exception was {e} and message {traceback.format_exc()}"
+                    f"An unhandled exception occurred at some point when handling redis stats, the exception was {e}"
                 )
                 raise
 
@@ -406,10 +421,10 @@ class StatsCollector:
                 try:
                     await client.delete_blob()
                 except Exception as e:
-                    logger.error(
-                        f"Error '{e}' occurred when deleting blob for"
-                        + f" {system} with stack track {traceback.format_exc()}"
+                    logger.debug(
+                        f"Error '{e}' occurred when deleting blob for {system} with stack track {traceback.format_exc()}"
                     )
+                    logger.error(f"Error '{e}' occurred when deleting blob for {system}")
 
         return azure_blob
 
@@ -445,9 +460,10 @@ class StatsCollector:
                     health_value = SUCCESS_VALUE
                 azul_health_check_status.labels(system=system, action=stage).set(health_value)
         except Exception as e:
-            logger.error(
+            logger.debug(
                 f"Error occurred while gathering {system} stats {e} with stack track {traceback.format_exc()}"
             )
+            logger.error(f"Error occurred while gathering {system} stats {e}")
             azul_health_check_status.labels(system=system, action=stage).set(FAIL_VALUE)
 
     @staticmethod
@@ -466,9 +482,10 @@ class StatsCollector:
                     value = FAIL_VALUE
             azul_health_check_status.labels(system=system, action=stage).set(value)
         except Exception as e:
-            logger.error(
+            logger.debug(
                 f"Error occurred while gathering {system} stats {e} with stack track {traceback.format_exc()}"
             )
+            logger.error(f"Error occurred while gathering {system} stats with error {e}")
             azul_health_check_status.labels(system=system, action=stage).set(FAIL_VALUE)
 
     async def run(self, run_once=False) -> float:
@@ -502,16 +519,17 @@ class StatsCollector:
             except TimeoutError:
                 stats_status.labels(reason=TIMEOUT_LABEL).set(FAIL_VALUE)
                 clean_exit = False
-                logger.warning(
-                    "Services couldn't scrape in time and timed out, "
-                    + f"services: {self._running_services}, formatted exception: {traceback.format_exc()}."
+                logger.debug(
+                    f"Services couldn't scrape in time and timed out, services: {self._running_services}, formatted exception: {traceback.format_exc()}."
                 )
+                logger.warning(f"Services couldn't scrape in time and timed out, services: {self._running_services}.")
                 if run_once:
                     raise
             except Exception as e:
                 stats_status.labels(reason=UNKNOWN_LABEL).set(FAIL_VALUE)
                 clean_exit = False
-                logger.error(f"Error when collecting stats {e} with stack track {traceback.format_exc()}")
+                logger.debug(f"Error when collecting stats {e} with stack track {traceback.format_exc()}")
+                logger.error(f"Error when collecting stats {e}")
                 if run_once:
                     raise
 
