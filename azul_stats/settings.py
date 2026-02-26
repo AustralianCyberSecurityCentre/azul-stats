@@ -1,7 +1,6 @@
 """Settings for the Stats module."""
 
-import logging
-from enum import Enum, StrEnum
+from enum import StrEnum
 from typing import Annotated
 
 from pydantic import AfterValidator

@@ -104,7 +104,7 @@ class StatsCollector:
     def __init__(self, settings: StatsSettings):
         self.s = settings
         logging.basicConfig(force=True)
-        logging.getLogger().setLevel(self.s.log_level)
+        logging.getLogger().setLevel(self.s.log_level.upper())
 
         self._running_services: list[str] = []
         self._async_stat_scrape_func: list[Callable[[], Future]] = []
