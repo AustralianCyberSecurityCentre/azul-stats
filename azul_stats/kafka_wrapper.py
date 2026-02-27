@@ -8,9 +8,9 @@ from kafka.admin import ConfigResource, NewTopic
 from kafka.consumer.fetcher import ConsumerRecord
 from kafka.errors import TopicAlreadyExistsError, UnknownTopicOrPartitionError
 
-from azul_stats.settings import KafkaSettings
+from azul_stats.settings import STATS_LOGGER_NAME, KafkaSettings
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(STATS_LOGGER_NAME)
 
 
 class KafkaWrapper:

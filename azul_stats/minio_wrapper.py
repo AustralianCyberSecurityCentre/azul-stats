@@ -7,9 +7,9 @@ import traceback
 from minio import Minio, S3Error
 from minio.credentials import IamAwsProvider
 
-from azul_stats.settings import MinioSettings
+from azul_stats.settings import STATS_LOGGER_NAME, MinioSettings
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(STATS_LOGGER_NAME)
 
 
 class MinioWrapper:

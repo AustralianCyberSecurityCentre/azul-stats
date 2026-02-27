@@ -20,6 +20,7 @@ from azul_stats.minio_wrapper import MinioWrapper
 from azul_stats.opensearch_wrapper import AsyncSearchWrapperManager, SearchWrapper
 from azul_stats.redis_wrapper import RedisWrapper
 from azul_stats.settings import (
+    STATS_LOGGER_NAME,
     AuthSettings,
     AzulProbeSettings,
     AzureBlobSettings,
@@ -32,7 +33,7 @@ from azul_stats.settings import (
 )
 from azul_stats.utils import SysExitThread, has_timed_out, random_word
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(STATS_LOGGER_NAME)
 
 stats_status = Gauge(
     "status_status",
@@ -103,8 +104,11 @@ class StatsCollector:
 
     def __init__(self, settings: StatsSettings):
         self.s = settings
-        logging.basicConfig(force=True)
-        logging.getLogger().setLevel(self.s.log_level.upper())
+        logging.basicConfig(
+            format="%(asctime)s %(levelname)-8s %(name)-30s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S%z"
+        )
+        stats_logger = logging.getLogger(STATS_LOGGER_NAME)
+        stats_logger.setLevel(self.s.log_level.upper())
 
         self._running_services: list[str] = []
         self._async_stat_scrape_func: list[Callable[[], Future]] = []
@@ -550,12 +554,12 @@ class StatsCollector:
 
 def main():
     """Main loop of application."""
-    port = settings.StatsSettings().prometheus_port
-    if port:
-        logger.info(f"started prometheus metrics server started on port {port}")
-        start_http_server(port)
+    s = settings.StatsSettings()
+    if s.prometheus_port:
+        logger.info(f"started prometheus metrics server started on port {s.prometheus_port}")
+        start_http_server(s.prometheus_port)
 
-    stats_collector = StatsCollector(StatsSettings())
+    stats_collector = StatsCollector(s)
     asyncio.run(stats_collector.run())
 
 

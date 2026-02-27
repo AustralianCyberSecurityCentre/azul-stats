@@ -6,6 +6,8 @@ from typing import Annotated
 from pydantic import AfterValidator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+STATS_LOGGER_NAME = "azul_stats"
+
 
 class StatTargets(StrEnum):
     """Enum of possible services to target when collecting stats."""
