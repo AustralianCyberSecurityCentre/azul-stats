@@ -27,7 +27,7 @@ class TestRedisMain(BaseTest):
         self.stats_settings.max_scrape_time = 30
         self.stats_collector = StatsCollector(self.stats_settings)
         self.start_time = time.time()
-        self.timeout_sec = 10
+        self.timeout_sec = 5
         return setup_result
 
     def _set_all_health_to(self, value: int):
@@ -88,9 +88,11 @@ class TestRedisMain(BaseTest):
         self.stats_collector._run_threaded_stage(
             REDIS_AUTH, self.system, rw.connect, self.start_time, self.timeout_sec
         )
+        self.start_time = time.time()
         self.stats_collector._run_threaded_stage(
             REDIS_SET_KEY, self.system, rw.set_key, self.start_time, self.timeout_sec
         )
+        self.start_time = time.time()
         self.stats_collector._run_threaded_stage(
             REDIS_GET_KEY, self.system, rw.get_key, self.start_time, self.timeout_sec
         )
