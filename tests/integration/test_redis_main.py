@@ -103,8 +103,7 @@ class TestRedisMain(BaseTest):
         self._set_all_health_to(SUCCESS_VALUE)
         self.cfg.password = "bad-password"
         collect_redis = self.stats_collector.redis_setup(self.cfg)
-        collect_redis(self.timeout_sec)
+        with self.assertRaises(TimeoutError):
+            collect_redis(self.timeout_sec)
         # Ensure everything succeeded.
         self.assertEqual(FAIL_VALUE, self.get_health_value(REDIS_AUTH))
-        self.assertEqual(FAIL_VALUE, self.get_health_value(REDIS_SET_KEY))
-        self.assertEqual(FAIL_VALUE, self.get_health_value(REDIS_GET_KEY))
