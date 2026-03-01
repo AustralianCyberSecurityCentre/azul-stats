@@ -6,6 +6,8 @@ from typing import Annotated
 from pydantic import AfterValidator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+STATS_LOGGER_NAME = "azul_stats"
+
 
 class StatTargets(StrEnum):
     """Enum of possible services to target when collecting stats."""
@@ -27,6 +29,9 @@ class StatsSettings(BaseSettings):
     # Port that prometheus will scrape from.
     prometheus_port: int = 8900
     max_scrape_time: float = 60
+
+    # Log level
+    log_level: str = "INFO"
 
     # Enable different scrape options
     azul: bool = False

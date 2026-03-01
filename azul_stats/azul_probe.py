@@ -4,9 +4,9 @@ import logging
 
 import httpx
 
-from azul_stats.settings import AzulProbeSettings
+from azul_stats.settings import STATS_LOGGER_NAME, AzulProbeSettings
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(STATS_LOGGER_NAME)
 
 
 class AsyncAzulProbe:

@@ -4,9 +4,9 @@ import logging
 
 import redis
 
-from azul_stats.settings import RedisSettings
+from azul_stats.settings import STATS_LOGGER_NAME, RedisSettings
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(STATS_LOGGER_NAME)
 
 
 class RedisWrapper:

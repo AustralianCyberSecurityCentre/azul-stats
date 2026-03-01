@@ -8,9 +8,9 @@ from azure.core.exceptions import ClientAuthenticationError
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob.aio import ContainerClient
 
-from azul_stats.settings import AzureBlobSettings
+from azul_stats.settings import STATS_LOGGER_NAME, AzureBlobSettings
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(STATS_LOGGER_NAME)
 
 
 class AzureContainerWrapperAsync:
@@ -121,6 +121,7 @@ class AzureContainerWrapperAsync:
 
                 await blob_client.delete_blob(delete_snapshots="include")
                 return True
-        except Exception:
-            logger.warning(f"Couldn't delete Azure blob with error {traceback.format_exc()}")
+        except Exception as e:
+            logger.debug(f"Couldn't delete Azure blob with error {traceback.format_exc()}")
+            logger.warning(f"Couldn't delete Azure blob with error {e}")
             return False

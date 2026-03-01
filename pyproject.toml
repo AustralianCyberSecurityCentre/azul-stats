@@ -39,7 +39,7 @@ dependencies = [
     "prometheus-client>=0.24.1",
     "pydantic-settings>2",
     "python-snappy>=0.7.3",
-    "redis>5.1",
+    "redis>=7.2.1",
 ]
 
 [project.scripts]

@@ -8,9 +8,9 @@ import httpx
 from authlib.integrations.httpx_client import AsyncOAuth2Client
 from authlib.jose import jwt
 
-from azul_stats.settings import AuthSettings
+from azul_stats.settings import STATS_LOGGER_NAME, AuthSettings
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(STATS_LOGGER_NAME)
 
 
 class AsyncAuthWrapper:
