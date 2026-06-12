@@ -33,7 +33,7 @@ services:
     command: server /data --console-address ":9001"
 
   redis:
-    image: redis:8.6-alpine@sha256:d103b9cd0b54b98b2c38e2b19220ee7adfe4b0fb22c406baa75f321179da2f00
+    image: redis:8.8-alpine@sha256:09160599abd229764c0fb44cb6be640294e1d360a54b19985ab4843dcf2d90f1
     restart: always
     ports:
       - "6379:6379"
