@@ -7,7 +7,7 @@ resolution-markers = [
 ]
 
 [options]
-exclude-newer = "2026-05-27T23:27:22.863187783Z"
+exclude-newer = "0001-01-01T00:00:00Z" # This has no effect and is included for backwards compatibility when using relative exclude-newer values.
 exclude-newer-span = "P1W"
 
 [options.exclude-newer-package]
@@ -238,7 +238,7 @@ wheels = [
 [[package]]
 name = "azul-bedrock"
 version = "10.0.17"
-source = { registry = "https://devpi.acsc.internal/azul/stable" }
+source = { registry = "https://devpi.acsc.internal/azul/stable/" }
 dependencies = [
     { name = "cachetools" },
     { name = "fastapi" },
@@ -1012,7 +1012,7 @@ wheels = [
 [[package]]
 name = "malpz"
 version = "11.0.13"
-source = { registry = "https://devpi.acsc.internal/azul/stable" }
+source = { registry = "https://devpi.acsc.internal/azul/stable/" }
 wheels = [
     { url = "https://devpi.acsc.internal/azul/stable/+f/af5/622ca193e045a/malpz-11.0.13-py3-none-any.whl", hash = "sha256:af5622ca193e045ae176e5b1cbdb5acb4fa3489cb097dcd94405824f35c93962" },
 ]
