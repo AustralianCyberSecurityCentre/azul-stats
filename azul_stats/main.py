@@ -4,7 +4,6 @@ import asyncio
 import logging
 import time
 import traceback
-from asyncio import Future
 from threading import Thread
 from typing import Any, Awaitable, Callable, Coroutine
 
@@ -111,7 +110,7 @@ class StatsCollector:
         stats_logger.setLevel(self.s.log_level.upper())
 
         self._running_services: list[str] = []
-        self._async_stat_scrape_func: list[Callable[[], Future]] = []
+        self._async_stat_scrape_func: list[Callable[[], Coroutine]] = []
         # Function that accepts number of seconds to timeout thread.
         self._thread_stat_scrape_func: list[Callable[[int], Thread]] = []
 

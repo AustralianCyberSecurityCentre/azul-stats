@@ -50,15 +50,23 @@ class AzureContainerWrapperAsync:
 
         # This works with a SAS key (accesskey) - found on the azure storage account
         self._client = ContainerClient(
-            account_url=self.cfg.host, container_name=self.cfg.container_name, credential=cred
+            account_url=self.cfg.host,
+            container_name=self.cfg.container_name,
+            credential=cred,  # ty: ignore[invalid-argument-type] ty doen't understand that ChainedTokenCredential implements the TokenCredential protocol
         )
 
     async def close(self):
         """Close the connection to the Azure container."""
+        if self._client is None:
+            logger.warning("Expected self._client to be a ContainerClient, got None")
+            return
         await self._client.close()
 
     async def auth(self) -> bool:
         """Verify if the client can authenticate or not."""
+        if self._client is None:
+            logger.warning("Expected self._client to be a ContainerClient, got None")
+            return False
         try:
             await self._client.exists()
             # Can auth container might not exist.
@@ -72,6 +80,8 @@ class AzureContainerWrapperAsync:
         """Verify that the azure container exists."""
         try:
             if self._exists is None:
+                if self._client is None:
+                    raise TypeError("Expected self._client to be a ContainerClient, got None")
                 self._exists = await self._client.exists()
             return self._exists
         except Exception as e:
@@ -84,6 +94,8 @@ class AzureContainerWrapperAsync:
             # Container must exist for this to work.
             if not await self.container_exists():
                 return False
+            if self._client is None:
+                raise TypeError("Expected self._client to be a ContainerClient, got None")
             async with self._client.get_blob_client(self.cfg.test_blob) as blob_client:
                 await blob_client.upload_blob(data, overwrite=True)
                 return True
@@ -97,6 +109,8 @@ class AzureContainerWrapperAsync:
             # Container must exist for this to work.
             if not await self.container_exists():
                 return False
+            if self._client is None:
+                raise TypeError("Expected self._client to be a ContainerClient, got None")
             async with self._client.get_blob_client(self.cfg.test_blob) as blob_client:
                 # If the blob doesn't exist can't download the blob.
                 if not await blob_client.exists():
@@ -114,6 +128,9 @@ class AzureContainerWrapperAsync:
             # Container must exist for this to work.
             if not await self.container_exists():
                 return False
+
+            if self._client is None:
+                raise TypeError("Expected self._client to be a ContainerClient, got None")
 
             async with self._client.get_blob_client(self.cfg.test_blob) as blob_client:
                 if not await blob_client.exists():
