@@ -112,7 +112,7 @@ class StatsCollector:
         self._running_services: list[str] = []
         self._async_stat_scrape_func: list[Callable[[], Coroutine]] = []
         # Function that accepts number of seconds to timeout thread.
-        self._thread_stat_scrape_func: list[Callable[[int], Thread]] = []
+        self._thread_stat_scrape_func: list[Callable[[int | float], Thread | None]] = []
 
         # Enable Azul probing
         if self.s.azul:
@@ -162,7 +162,7 @@ class StatsCollector:
         """Standard method for running an opensearch stage and collecting stats for it."""
         try:
             with azul_health_check_timing.labels(system=StatTargets.opensearch, action=stage).time():
-                await func(sw, **kwargs)
+                await func(sw, **kwargs)  # ty: ignore[missing-argument] ty doesn't understand kwargs unpacking
             azul_health_check_status.labels(system=StatTargets.opensearch, action=stage).set(SUCCESS_VALUE)
             azul_health_check_status.labels(system=StatTargets.opensearch, action=OPENSEARCH_AUTH_LABEL).set(
                 SUCCESS_VALUE
@@ -197,7 +197,7 @@ class StatsCollector:
     @staticmethod
     async def _opensearch_get_doc_stage(sw: SearchWrapper, doc: dict):
         """Get a single Opensearch document."""
-        result = await sw.get_doc(doc.get("id"))
+        result = await sw.get_doc(doc.get("id", "None"))
         if len(result.get("hits", {}).get("hits", [])) != 1:
             raise Exception("Failed to get valid search result.")
 
@@ -213,6 +213,8 @@ class StatsCollector:
         """Get opensearch stats."""
         try:
             culled_health_info, culled_shard_info = await sw.collect_stats()
+            if culled_health_info is None or culled_shard_info is None:
+                raise TypeError("Expected culled_health_info and culled_shard_info to be dicts, got None")
             stringy_health_info = dict()
             for k, v in culled_health_info.items():
                 stringy_health_info[str(k)] = str(v)
@@ -244,13 +246,13 @@ class StatsCollector:
             for _ in range(10):
                 test_docs.append(sw.generate_test_doc())
 
-            await self._run_opensearch_stage(OPENSEARCH_CREATE_INDEX_LABEL, self._create_index_stage, sw)
+            await self._run_opensearch_stage(OPENSEARCH_CREATE_INDEX_LABEL, self._create_index_stage, sw) # ty: ignore[invalid-argument-type]
             await self._run_opensearch_stage(OPENSEARCH_INDEX_DOCS_LABEL, self._index_docs_stage, sw, docs=test_docs)
             await self._run_opensearch_stage(
                 OPENSEARCH_GET_DOC_LABEL, self._opensearch_get_doc_stage, sw, doc=test_docs[0]
             )
-            await self._run_opensearch_stage(OPENSEARCH_GET_AGG_LABEL, self._get_docs_agg_stage, sw)
-            await self._run_opensearch_stage(OPENSEARCH_COLLECT_STATS_LABEL, self._collect_stats, sw)
+            await self._run_opensearch_stage(OPENSEARCH_GET_AGG_LABEL, self._get_docs_agg_stage, sw) # ty: ignore[invalid-argument-type]
+            await self._run_opensearch_stage(OPENSEARCH_COLLECT_STATS_LABEL, self._collect_stats, sw) # ty: ignore[invalid-argument-type]
             # Delete the index to ensure it doesn't get too big.
             try:
                 await sw.delete_index()
