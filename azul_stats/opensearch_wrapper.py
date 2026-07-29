@@ -1,6 +1,7 @@
 """Wrapper for Opensearch client to make it simpler to use after authenticating to the Opensearch server."""
 
 import datetime
+from typing import Any
 
 from opensearchpy import AsyncOpenSearch
 
@@ -54,6 +55,7 @@ class SearchWrapper:
     def init_client(self):
         """Initalise the Opensearch client, doesn't actually verify the client is valid and can contact Opensearch."""
         # Username and password
+        access: dict[str, Any] = {}
         if self._opensearch_settings.username and self._opensearch_settings.password:
             access = {"http_auth": (self._opensearch_settings.username, self._opensearch_settings.password)}
         else:

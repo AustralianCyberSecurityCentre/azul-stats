@@ -246,13 +246,13 @@ class StatsCollector:
             for _ in range(10):
                 test_docs.append(sw.generate_test_doc())
 
-            await self._run_opensearch_stage(OPENSEARCH_CREATE_INDEX_LABEL, self._create_index_stage, sw) # ty: ignore[invalid-argument-type]
+            await self._run_opensearch_stage(OPENSEARCH_CREATE_INDEX_LABEL, self._create_index_stage, sw)  # ty: ignore[invalid-argument-type]
             await self._run_opensearch_stage(OPENSEARCH_INDEX_DOCS_LABEL, self._index_docs_stage, sw, docs=test_docs)
             await self._run_opensearch_stage(
                 OPENSEARCH_GET_DOC_LABEL, self._opensearch_get_doc_stage, sw, doc=test_docs[0]
             )
-            await self._run_opensearch_stage(OPENSEARCH_GET_AGG_LABEL, self._get_docs_agg_stage, sw) # ty: ignore[invalid-argument-type]
-            await self._run_opensearch_stage(OPENSEARCH_COLLECT_STATS_LABEL, self._collect_stats, sw) # ty: ignore[invalid-argument-type]
+            await self._run_opensearch_stage(OPENSEARCH_GET_AGG_LABEL, self._get_docs_agg_stage, sw)  # ty: ignore[invalid-argument-type]
+            await self._run_opensearch_stage(OPENSEARCH_COLLECT_STATS_LABEL, self._collect_stats, sw)  # ty: ignore[invalid-argument-type]
             # Delete the index to ensure it doesn't get too big.
             try:
                 await sw.delete_index()
@@ -447,9 +447,9 @@ class StatsCollector:
 
     def _run_threaded_stage(
         self,
-        stage: StatTargets,
+        stage: StatTargets | str,
         system: str,
-        func: Callable[[Any], bool],
+        func: Callable[[Any], bool] | Callable[[], bool],
         start_time: float,
         timeout_sec: float,
         **kwargs,
@@ -458,7 +458,7 @@ class StatsCollector:
             raise TimeoutError(f"{system} failed to scrape in time and has timed out at stage {stage}")
         try:
             with azul_health_check_timing.labels(system=system, action=stage).time():
-                result = func(**kwargs)
+                result = func(**kwargs) # ty: ignore[missing-argument] ty doesn't understand unpacking
                 health_value = FAIL_VALUE
                 # If the function ran successfully report success value.
                 if result:
@@ -475,13 +475,13 @@ class StatsCollector:
     async def _run_async_stage(
         stage: str,
         system: StatTargets,
-        func: Callable[[Any], Awaitable[bool]],
+        func: Callable[[], Coroutine[Any, Any, bool]] | Callable[[bytes], Coroutine[Any, Any, bool]],
         **kwargs,
     ):
         """Standard method for running an opensearch stage and collecting stats for it."""
         try:
             with azul_health_check_timing.labels(system=system, action=stage).time():
-                result: bool = await func(**kwargs)
+                result: bool = await func(**kwargs) # ty: ignore[missing-argument] ty doesn't understand unpacking
                 value = SUCCESS_VALUE
                 if not result:
                     value = FAIL_VALUE
