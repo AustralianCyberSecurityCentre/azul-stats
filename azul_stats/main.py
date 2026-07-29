@@ -458,7 +458,7 @@ class StatsCollector:
             raise TimeoutError(f"{system} failed to scrape in time and has timed out at stage {stage}")
         try:
             with azul_health_check_timing.labels(system=system, action=stage).time():
-                result = func(**kwargs) # ty: ignore[missing-argument] ty doesn't understand unpacking
+                result = func(**kwargs)  # ty: ignore[missing-argument] ty doesn't understand unpacking
                 health_value = FAIL_VALUE
                 # If the function ran successfully report success value.
                 if result:
@@ -481,7 +481,7 @@ class StatsCollector:
         """Standard method for running an opensearch stage and collecting stats for it."""
         try:
             with azul_health_check_timing.labels(system=system, action=stage).time():
-                result: bool = await func(**kwargs) # ty: ignore[missing-argument] ty doesn't understand unpacking
+                result: bool = await func(**kwargs)  # ty: ignore[missing-argument] ty doesn't understand unpacking
                 value = SUCCESS_VALUE
                 if not result:
                     value = FAIL_VALUE
