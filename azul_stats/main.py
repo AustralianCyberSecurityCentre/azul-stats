@@ -5,7 +5,7 @@ import logging
 import time
 import traceback
 from threading import Thread
-from typing import Any, Awaitable, Callable, Coroutine
+from typing import Any, Callable, Coroutine
 
 import opensearchpy
 from prometheus_client import Gauge, Info, start_http_server
@@ -157,7 +157,11 @@ class StatsCollector:
 
     @staticmethod
     async def _run_opensearch_stage(
-        stage: str, func: Callable[[SearchWrapper, Any], Awaitable[Any]], sw: SearchWrapper, **kwargs
+        stage: str,
+        func: Callable[[SearchWrapper, Any], Coroutine[Any, Any, None]]
+        | Callable[[SearchWrapper], Coroutine[Any, Any, None]],
+        sw: SearchWrapper,
+        **kwargs,
     ):
         """Standard method for running an opensearch stage and collecting stats for it."""
         try:
@@ -246,13 +250,13 @@ class StatsCollector:
             for _ in range(10):
                 test_docs.append(sw.generate_test_doc())
 
-            await self._run_opensearch_stage(OPENSEARCH_CREATE_INDEX_LABEL, self._create_index_stage, sw)  # ty: ignore[invalid-argument-type]
+            await self._run_opensearch_stage(OPENSEARCH_CREATE_INDEX_LABEL, self._create_index_stage, sw)
             await self._run_opensearch_stage(OPENSEARCH_INDEX_DOCS_LABEL, self._index_docs_stage, sw, docs=test_docs)
             await self._run_opensearch_stage(
                 OPENSEARCH_GET_DOC_LABEL, self._opensearch_get_doc_stage, sw, doc=test_docs[0]
             )
-            await self._run_opensearch_stage(OPENSEARCH_GET_AGG_LABEL, self._get_docs_agg_stage, sw)  # ty: ignore[invalid-argument-type]
-            await self._run_opensearch_stage(OPENSEARCH_COLLECT_STATS_LABEL, self._collect_stats, sw)  # ty: ignore[invalid-argument-type]
+            await self._run_opensearch_stage(OPENSEARCH_GET_AGG_LABEL, self._get_docs_agg_stage, sw)
+            await self._run_opensearch_stage(OPENSEARCH_COLLECT_STATS_LABEL, self._collect_stats, sw)
             # Delete the index to ensure it doesn't get too big.
             try:
                 await sw.delete_index()
