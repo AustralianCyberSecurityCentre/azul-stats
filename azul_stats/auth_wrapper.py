@@ -60,7 +60,7 @@ class AsyncAuthWrapper:
         """Get the jwks keys to allow for validation of the jwt token."""
         try:
             jwks_uri = (await self._get_well_known()).get("jwks_uri")
-            resp = await self._httpx_async_client.get(jwks_uri)
+            resp = await self._httpx_async_client.get(jwks_uri)  # ty: ignore[invalid-argument-type] ty thinks jwks_uri is Any | None but self._httpx_async_client.get wants URL | str. Just let any resulting exceptions get caught below.
             return resp.json()
         except Exception as e:
             logger.error(f"Couldn't get jwks due to error {e}")

@@ -4,9 +4,8 @@ import asyncio
 import logging
 import time
 import traceback
-from asyncio import Future
 from threading import Thread
-from typing import Any, Awaitable, Callable, Coroutine
+from typing import Any, Callable, Coroutine
 
 import opensearchpy
 from prometheus_client import Gauge, Info, start_http_server
@@ -111,9 +110,9 @@ class StatsCollector:
         stats_logger.setLevel(self.s.log_level.upper())
 
         self._running_services: list[str] = []
-        self._async_stat_scrape_func: list[Callable[[], Future]] = []
+        self._async_stat_scrape_func: list[Callable[[], Coroutine]] = []
         # Function that accepts number of seconds to timeout thread.
-        self._thread_stat_scrape_func: list[Callable[[int], Thread]] = []
+        self._thread_stat_scrape_func: list[Callable[[int | float], Thread | None]] = []
 
         # Enable Azul probing
         if self.s.azul:
@@ -158,12 +157,16 @@ class StatsCollector:
 
     @staticmethod
     async def _run_opensearch_stage(
-        stage: str, func: Callable[[SearchWrapper, Any], Awaitable[Any]], sw: SearchWrapper, **kwargs
+        stage: str,
+        func: Callable[[SearchWrapper, Any], Coroutine[Any, Any, None]]
+        | Callable[[SearchWrapper], Coroutine[Any, Any, None]],
+        sw: SearchWrapper,
+        **kwargs,
     ):
         """Standard method for running an opensearch stage and collecting stats for it."""
         try:
             with azul_health_check_timing.labels(system=StatTargets.opensearch, action=stage).time():
-                await func(sw, **kwargs)
+                await func(sw, **kwargs)  # ty: ignore[missing-argument] ty doesn't understand kwargs unpacking
             azul_health_check_status.labels(system=StatTargets.opensearch, action=stage).set(SUCCESS_VALUE)
             azul_health_check_status.labels(system=StatTargets.opensearch, action=OPENSEARCH_AUTH_LABEL).set(
                 SUCCESS_VALUE
@@ -198,7 +201,7 @@ class StatsCollector:
     @staticmethod
     async def _opensearch_get_doc_stage(sw: SearchWrapper, doc: dict):
         """Get a single Opensearch document."""
-        result = await sw.get_doc(doc.get("id"))
+        result = await sw.get_doc(doc.get("id", "None"))
         if len(result.get("hits", {}).get("hits", [])) != 1:
             raise Exception("Failed to get valid search result.")
 
@@ -214,6 +217,8 @@ class StatsCollector:
         """Get opensearch stats."""
         try:
             culled_health_info, culled_shard_info = await sw.collect_stats()
+            if culled_health_info is None or culled_shard_info is None:
+                raise TypeError("Expected culled_health_info and culled_shard_info to be dicts, got None")
             stringy_health_info = dict()
             for k, v in culled_health_info.items():
                 stringy_health_info[str(k)] = str(v)
@@ -446,9 +451,9 @@ class StatsCollector:
 
     def _run_threaded_stage(
         self,
-        stage: StatTargets,
+        stage: StatTargets | str,
         system: str,
-        func: Callable[[Any], bool],
+        func: Callable[[Any], bool] | Callable[[], bool],
         start_time: float,
         timeout_sec: float,
         **kwargs,
@@ -457,7 +462,7 @@ class StatsCollector:
             raise TimeoutError(f"{system} failed to scrape in time and has timed out at stage {stage}")
         try:
             with azul_health_check_timing.labels(system=system, action=stage).time():
-                result = func(**kwargs)
+                result = func(**kwargs)  # ty: ignore[missing-argument] ty doesn't understand unpacking
                 health_value = FAIL_VALUE
                 # If the function ran successfully report success value.
                 if result:
@@ -474,13 +479,13 @@ class StatsCollector:
     async def _run_async_stage(
         stage: str,
         system: StatTargets,
-        func: Callable[[Any], Awaitable[bool]],
+        func: Callable[[], Coroutine[Any, Any, bool]] | Callable[[bytes], Coroutine[Any, Any, bool]],
         **kwargs,
     ):
         """Standard method for running an opensearch stage and collecting stats for it."""
         try:
             with azul_health_check_timing.labels(system=system, action=stage).time():
-                result: bool = await func(**kwargs)
+                result: bool = await func(**kwargs)  # ty: ignore[missing-argument] ty doesn't understand unpacking
                 value = SUCCESS_VALUE
                 if not result:
                     value = FAIL_VALUE

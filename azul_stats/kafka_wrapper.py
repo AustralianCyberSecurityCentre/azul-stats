@@ -55,7 +55,7 @@ class KafkaWrapper:
     def can_connect(self) -> bool:
         """Return True if the client can connect to the kafka bootstrap server."""
         # Verify connection to broker was valid.
-        if self.admin_client is None:
+        if self.admin_client is None or self.consumer_client is None or self.producer_client is None:
             return False
         return (
             self.consumer_client.bootstrap_connected() is True and self.producer_client.bootstrap_connected() is True
@@ -108,7 +108,7 @@ class KafkaWrapper:
     def produce_to_topic(self, key: bytes | str, data: bytes | str) -> bool:
         """Create data in Kafka topic."""
         # Verify connection to broker was valid.
-        if self.admin_client is None:
+        if self.admin_client is None or self.producer_client is None:
             return False
         if isinstance(data, str):
             data = data.encode()
@@ -128,7 +128,7 @@ class KafkaWrapper:
     def set_consumer_offset_latest(self, max_attempts=5) -> bool:
         """Ensure the consumer has partitions and is set to the latest point in the topic."""
         # Verify connection to broker was valid.
-        if self.admin_client is None:
+        if self.admin_client is None or self.consumer_client is None:
             return False
         attempt = 0
         while len(self.consumer_client.assignment()) == 0 and attempt < max_attempts:
@@ -139,7 +139,7 @@ class KafkaWrapper:
     def consume_from_topic_and_check_has_key_value(self, key: bytes | str, data: bytes | str, max_attempts=5) -> bool:
         """Return true if data could be consumed from the test topic."""
         # Verify connection to broker was valid.
-        if self.admin_client is None:
+        if self.admin_client is None or self.consumer_client is None:
             return False
         if isinstance(data, str):
             data = data.encode()
