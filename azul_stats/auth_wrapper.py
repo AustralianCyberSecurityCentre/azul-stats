@@ -6,6 +6,7 @@ import httpx
 from async_lru import alru_cache
 from authlib.integrations.httpx_client import AsyncOAuth2Client
 from joserfc import jwt
+from joserfc.jwk import KeySet
 
 from azul_stats.settings import STATS_LOGGER_NAME, AuthSettings
 
@@ -115,15 +116,20 @@ class AsyncAuthWrapper:
             return False
 
         jwk_keys = await self._get_jwks()
-        claims = jwt.decode(self._access_token, jwk_keys)
+        try:
+            key_set = KeySet.import_key_set(jwk_keys)
+            token = jwt.decode(self._access_token, key_set)
+        except Exception as e:
+            logger.error(f"Failed to decode and validate JWT with error {e}")
+            return False
 
         if not self._is_expected_in_actual(
-            self.cfg.expected_audience, claims.claims.get("aud"), "Failed to auth because the audience was incorrect"
+            self.cfg.expected_audience, token.claims.get("aud"), "Failed to auth because the audience was incorrect"
         ):
             return False
         elif not self._is_expected_in_actual(
             self.cfg.expected_roles,
-            claims.claims.get("roles"),
+            token.claims.get("roles"),
             "Failed to verify roles because at least one is missing",
         ):
             return False
