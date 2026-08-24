@@ -162,7 +162,7 @@ class TestMainAsync(unittest.IsolatedAsyncioTestCase):
         try:
             async with asyncio.timeout(0.2):
                 await stats_collector.run()
-        except asyncio.exceptions.CancelledError:
+        except (asyncio.exceptions.TimeoutError, asyncio.exceptions.CancelledError):
             pass
 
         patched_time_sleep.assert_called()
