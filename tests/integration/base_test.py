@@ -73,16 +73,16 @@ class BaseTest(IsolatedAsyncioTestCase):
         sius("azure_bkup_test_blob", "test-blob-backup")
 
         # Minio
-        sius("minio_host", "localhost:9000")
-        sius("minio_accesskey", "dummyS3accessKEY")
-        sius("minio_secretkey", "dummyS3secretKEY")
+        sius("minio_host", "localhost:8333")
+        sius("minio_accesskey", "seaweedfs-admin")
+        sius("minio_secretkey", "seaweedfs-secretkey")
         sius("minio_bucket_name", "test-bucket")
         sius("minio_certificate_verification", "false")
 
         # backup Minio
-        sius("minio_bkup_host", "localhost:9000")
-        sius("minio_bkup_accesskey", "dummyS3accessKEY")
-        sius("minio_bkup_secretkey", "dummyS3secretKEY")
+        sius("minio_bkup_host", "localhost:8333")
+        sius("minio_bkup_accesskey", "seaweedfs-admin")
+        sius("minio_bkup_secretkey", "seaweedfs-secretkey")
         sius("minio_bkup_bucket_name", "test-bucket")
         sius("minio_bkup_certificate_verification", "false")
         # Prevent race condition where the non-backup minio can delete the blob while backup minio is checking for existence
