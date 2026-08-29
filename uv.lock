@@ -1973,6 +1973,10 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/0b/d7/9ff7449a4c7e6428f2c6f298e74cf24b70668f29d45c249507a723ff3782/ty-0.0.74-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:dc086db5367d912c31c0cc872deb7387290e779a4b9b54fcb944673a7cd52c7b", size = 12395272, upload-time = "2026-08-22T15:05:34.702Z" },
     { url = "https://files.pythonhosted.org/packages/b1/dd/b23a5b6b35d37df89dc8dc5daa09efd9245a668b50c4c81c25de21567dc1/ty-0.0.74-py3-none-musllinux_1_2_armv7l.whl", hash = "sha256:0314d7b391cf684e47c2fa093d2ce4c597cfc9b01d9a315fe204aed6359b271b", size = 12573079, upload-time = "2026-08-22T15:05:37.683Z" },
     { url = "https://files.pythonhosted.org/packages/23/c5/ccba16239d6129533c8b3603458d0f4dd2ba69478e47059073968e74261d/ty-0.0.74-py3-none-musllinux_1_2_i686.whl", hash = "sha256:c4a45dd2e991e8bdae82ba78c8cd051b253f60bc71a6536598fa3ef580b4fc9b", size = 12832506, upload-time = "2026-08-22T15:05:40.505Z" },
+    { url = "https://files.pythonhosted.org/packages/6d/1c/2390912634dff4f341f97b397f2aee341ff062be0a66cda37d59375454f2/ty-0.0.74-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:210e2eac6b018fb934e2b8dac3956a0ba076a3fb1fa6f135058c825e5b759b81", size = 13154752, upload-time = "2026-08-22T15:05:43.355Z" },
+    { url = "https://files.pythonhosted.org/packages/c4/33/a8c12188227e6f74f91853a7374e01ed81d6ad21c16c8b70e92dbebfe46a/ty-0.0.74-py3-none-win32.whl", hash = "sha256:db0bb6a8f098ef9bd1be861f73b4f7c0320d40d4c05c7ae0a8677d4e7aa4f6e5", size = 12130002, upload-time = "2026-08-22T15:05:46.058Z" },
+    { url = "https://files.pythonhosted.org/packages/21/5c/064f28ccb9c234cfce5a2f7aa69a256663d5ae5bb0290b3a9706cc4d1e4c/ty-0.0.74-py3-none-win_amd64.whl", hash = "sha256:bebff181515255b3c78bd2e7693ae66fab6064ad4feea2065c68bc01022aa678", size = 12771435, upload-time = "2026-08-22T15:05:48.811Z" },
+    { url = "https://files.pythonhosted.org/packages/fe/06/d6becdaca0315346c26b6df97cb0eafa81de4f870945d6989e88704374ed/ty-0.0.74-py3-none-win_arm64.whl", hash = "sha256:1a3469eaaf8c85b1c0a15bede25d36daea4b09fce1d913e965b24e24b3f1d6c6", size = 12558299, upload-time = "2026-08-22T15:05:51.543Z" },
 ]
 
 [[package]]
