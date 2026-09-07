@@ -261,7 +261,7 @@ wheels = [
 
 [[package]]
 name = "azul-bedrock"
-version = "13.0.15"
+version = "13.0.17"
 source = { registry = "https://devpi.acsc.internal/azul/stable/" }
 dependencies = [
     { name = "babel" },
@@ -279,12 +279,12 @@ dependencies = [
     { name = "yara-x" },
 ]
 wheels = [
-    { url = "https://devpi.acsc.internal/azul/stable/+f/b9e/e976e0723e829/azul_bedrock-13.0.15-py3-none-any.whl", hash = "sha256:b9ee976e0723e8293d5f0de714723a98f5ac9c5e025e5ed028892f0dceafbbbb" },
+    { url = "https://devpi.acsc.internal/azul/stable/+f/d77/79c9715f4ee72/azul_bedrock-13.0.17-py3-none-any.whl", hash = "sha256:d7779c9715f4ee72a7862e1856214cec7205a1d82e6d575eede7eda44c131ca5" },
 ]
 
 [[package]]
 name = "azul-client"
-version = "13.0.24"
+version = "13.0.26"
 source = { registry = "https://devpi.acsc.internal/azul/stable/" }
 dependencies = [
     { name = "azul-bedrock" },
@@ -300,7 +300,7 @@ dependencies = [
     { name = "tenacity" },
 ]
 wheels = [
-    { url = "https://devpi.acsc.internal/azul/stable/+f/894/b5d6a4e938372/azul_client-13.0.24-py3-none-any.whl", hash = "sha256:894b5d6a4e938372dc3553898b76b9620b0ac28ee5ffe86b88427ca5103b955b" },
+    { url = "https://devpi.acsc.internal/azul/stable/+f/626/2359c6bcf8151/azul_client-13.0.26-py3-none-any.whl", hash = "sha256:6262359c6bcf815121e592fb119e0baaf1fd3f4960cd7f5c7cebe22feee63e76" },
 ]
 
 [[package]]
@@ -1134,10 +1134,10 @@ wheels = [
 
 [[package]]
 name = "malpz"
-version = "13.0.5"
+version = "13.0.7"
 source = { registry = "https://devpi.acsc.internal/azul/stable/" }
 wheels = [
-    { url = "https://devpi.acsc.internal/azul/stable/+f/624/95d8db2a4dae4/malpz-13.0.5-py3-none-any.whl", hash = "sha256:62495d8db2a4dae41e94f09cdf0701688b22faf490856192eec0855c59a7b5f9" },
+    { url = "https://devpi.acsc.internal/azul/stable/+f/6c5/87a7236a84d56/malpz-13.0.7-py3-none-any.whl", hash = "sha256:6c587a7236a84d5631d740c22b973d9475da7ed7f3fec2c9424b3a8c331aa099" },
 ]
 
 [[package]]
