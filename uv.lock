@@ -326,7 +326,7 @@ wheels = [
 
 [[package]]
 name = "azul-client"
-version = "13.0.106"
+version = "13.0.109"
 source = { registry = "https://devpi.acsc.internal/azul/stable/" }
 dependencies = [
     { name = "azul-bedrock" },
@@ -342,7 +342,7 @@ dependencies = [
     { name = "tenacity" },
 ]
 wheels = [
-    { url = "https://devpi.acsc.internal/azul/stable/+f/6ed/7dfd86d7d43af/azul_client-13.0.106-py3-none-any.whl", hash = "sha256:6ed7dfd86d7d43afe18332c6e9091bde4a2d04a169cf39fb08ea860b19534921" },
+    { url = "https://devpi.acsc.internal/azul/stable/+f/54d/ab8526fac86a5/azul_client-13.0.109-py3-none-any.whl", hash = "sha256:54dab8526fac86a57e6ac38fcdf84283d1bffd54f4919ea9cafcd1bc9ec2490d" },
 ]
 
 [[package]]
@@ -1208,10 +1208,10 @@ wheels = [
 
 [[package]]
 name = "malpz"
-version = "13.0.24"
+version = "13.0.26"
 source = { registry = "https://devpi.acsc.internal/azul/stable/" }
 wheels = [
-    { url = "https://devpi.acsc.internal/azul/stable/+f/5e9/d59e055b8f644/malpz-13.0.24-py3-none-any.whl", hash = "sha256:5e9d59e055b8f6445c727cce0fb801e3fdbdcc0a46ce958c972b000951b00061" },
+    { url = "https://devpi.acsc.internal/azul/stable/+f/b21/425f4e8e34926/malpz-13.0.26-py3-none-any.whl", hash = "sha256:b21425f4e8e34926aa3b5dbe628f2b99bb4dabedfb7681bac4b9581d11af718a" },
 ]
 
 [[package]]
