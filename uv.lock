@@ -326,7 +326,7 @@ wheels = [
 
 [[package]]
 name = "azul-client"
-version = "14.0.6"
+version = "14.0.8"
 source = { registry = "https://devpi.acsc.internal/azul/stable/" }
 dependencies = [
     { name = "azul-bedrock" },
@@ -342,7 +342,7 @@ dependencies = [
     { name = "tenacity" },
 ]
 wheels = [
-    { url = "https://devpi.acsc.internal/azul/stable/+f/8a4/459bc8ab4f7d2/azul_client-14.0.6-py3-none-any.whl", hash = "sha256:8a4459bc8ab4f7d25cad93dbd5bfb946470da4f94721115f8cb66bd405561a4a" },
+    { url = "https://devpi.acsc.internal/azul/stable/+f/79b/112261bc0a6b9/azul_client-14.0.8-py3-none-any.whl", hash = "sha256:79b112261bc0a6b9c6e80fe5acd55cdc6451e5f7744143545c6e2830cf149bad" },
 ]
 
 [[package]]
